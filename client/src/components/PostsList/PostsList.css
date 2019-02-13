@@ -1,0 +1,17 @@
+.posts__list {
+    list-style-type: decimal;
+    padding: 0 1rem ;
+    width: 60rem;
+    margin: 0 auto;
+}
+.posts__list-item {
+    text-align: left;
+    padding: .5rem 0;
+    font-size: 1.6rem;
+    line-height: 1.2;
+}
+.posts__container > h3 {
+    font-size: 2.6rem;
+    text-decoration: underline;
+    margin-bottom: 2rem;
+}
