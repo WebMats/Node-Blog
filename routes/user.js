@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const userDB = require('../data/helpers/userDb');
+const nameValidator = require('../middleware/nameValidator');
 
 
-router.post('', (req, res, next) => {
+router.post('', nameValidator, (req, res, next) => {
     const { name } = req.body;
     if (!name) {
         res.status(404).json({errorMessage: "Please provide a name field."})
@@ -56,7 +57,7 @@ router.delete('/:id', (req, res, next) => {
         res.status(500).json({errorMessage: "Could not delete user."})
     });
 })
-router.put('/:id', (req, res, next) => {
+router.put('/:id', nameValidator, (req, res, next) => {
     const { name } = req.body;
     if (!name) {
         res.status(404).json({errorMessage: "Please provide a name field to update."})

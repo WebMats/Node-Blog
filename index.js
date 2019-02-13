@@ -7,7 +7,7 @@ const postsRoutes = require('./routes/posts');
 
 app.use(express.json())
 
-app.use('/user', userRoutes);
+app.use('/user', userRoutes)
 app.use('/posts', postsRoutes);
 
 
