@@ -73,6 +73,15 @@ router.put('/:id', (req, res, next) => {
         });
     }
 })
+router.get('/posts/:id', async (req, res, next) => {
+    const user = await userDB.getById(req.params.id);
+    if (!user) {
+        res.status(404).json({errorMessage: "There is no user with this id."})
+    } else {
+        const userPosts = await userDB.getUserPosts(req.params.id);
+        res.status(200).json(userPosts);
+    }
+})
 
 
 
