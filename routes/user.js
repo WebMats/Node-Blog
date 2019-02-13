@@ -22,7 +22,7 @@ router.post('', (req, res, next) => {
 })
 router.get('', (req, res, next) => {
     userDB.get().then((result) => {
-        if (!result.length) {
+        if (!result.length > 0) {
             res.status(404).json({errorMessage: "There is no 'user' field in our database." })
         } else {
             res.status(200).json(result)
