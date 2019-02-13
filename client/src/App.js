@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { Route, Link } from 'react-router-dom'
+import PostsList from './components/PostsList/PostsList';
 import './App.css';
 
 class App extends Component {
@@ -31,14 +33,10 @@ class App extends Component {
       <div className="App">
         <div className="users__container">
           <ul className="user__list">
-              {this.state.users.map(user => <li className="user__list-item" key={user.id}>{user.name} <span onClick={this.fetchPosts.bind(this, user.id)}>Show Posts</span></li>)}
+              {this.state.users.map(user => <li className="user__list-item" key={user.id}>{user.name} <span onClick={this.fetchPosts.bind(this, user.id)}><Link to={`/users/${user.id}`}>Show Posts</Link></span></li>)}
           </ul>
         </div>
-        <div className="posts__container">
-          <ul className="posts__list">
-              {this.state.userPosts.map(post => <li className="posts__list-item" key={post.id}>{post.text}</li>)}
-          </ul>
-        </div>
+        <Route path="/users" render={() => <PostsList posts={this.state.userPosts} />} />
       </div>
     );
   }
