@@ -14,17 +14,58 @@ class App extends Component {
     this.setState({fetchedUsers: true})
   }
   fetchUsers = () => {
-    fetch('http://localhost:8000/users', {method: "GET"}).then(async (result) => {
-      const users = await result.json()
-      this.setState({users})
+    const requestBody = {
+      query: `
+        query {
+          users {
+            id
+            name
+          }
+        }
+      `
+    }
+    fetch('http://localhost:8000/graphql', {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(requestBody)
+    }).then(async (result) => {
+      const resData = await result.json()
+      
+      this.setState({users: resData.data.users})
     }).catch((err) => {
       console.log(err)
       throw err
     });
   }
   fetchPosts = (userId) => {
-    fetch(`http://localhost:8000/users/posts/${userId}`, {method: "GET"}).then( async (result) => {
-      const userPosts = await result.json();
+    const requestBody = {
+      query: `
+        query Users($userId: Int){
+          users(id: $userId) {
+            name
+            postsList {
+              id
+              text
+            }
+          }
+        }
+      `,
+      variables: {
+        userId: +userId
+      }
+    }
+    fetch(`http://localhost:8000/graphql`, {
+    method: "POST",
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(requestBody)
+  }).then( async (result) => {
+      const resData = await result.json();
+      console.log('ran')
+      const userPosts = resData.data.users[0].postsList
       if (userPosts.length === 0) {
         this.setState({userPosts: "There are no posts for this user."})
         return 

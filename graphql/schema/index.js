@@ -5,23 +5,24 @@ module.exports = buildSchema(`
     type User {
         id: Int!
         name: String!
-        PostsList: [Post!]!
+        postsList: [Post!]!
     }
     type Post {
         id: Int!
         text: String!
-        user_id: String!
+        user_id: Int!
+        creator: User!
     }
-    
     input UserInput {
         name: String!
     }
     input PostInput {
+        postId: Int!
         text: String!
     }
     type RootQuery {
-        users: [User!]!
-        posts(id: Int): [Post!]!
+        users(id: Int): [User!]!
+        posts: [Post!]!
     }
     type RootMutation {
         createUser(userInput: UserInput): User!

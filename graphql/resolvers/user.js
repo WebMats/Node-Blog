@@ -1,15 +1,25 @@
 const userDB = require('../../data/helpers/userDb');
-
+const { normalizeUser } = require('./shared');
 
 module.exports = {
-    users: async () => {  
+    users: async (args) => {  
         try {
-            return userDB.get().then((result) => {
-                return result;
-            }).catch((err) => {
-                console.log(err)
-                throw new Error("Could not fetch users.")
-            });
+            if (args.id) {
+                return userDB.getById(args.id).then(user => {
+                    return [normalizeUser(user)]
+                }).catch(err => {
+                    console.log(err)
+                })
+            } else {
+                return userDB.get().then((result) => {
+                    return result.map(user => {
+                        return normalizeUser(user);
+                    });
+                }).catch((err) => {
+                    console.log(err)
+                    throw new Error("Could not fetch users.")
+                });
+        }
         } catch {
             console.log(err)
             throw err
