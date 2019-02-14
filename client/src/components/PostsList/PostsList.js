@@ -6,7 +6,7 @@ import './PostsList.css';
 const postsList = (props) => {
     let user;
     if (Array.isArray(props.posts) && props.posts.length < 1) {
-        props.triggerFetch(props.match.params.id)
+        props.triggerFetch({userId: +props.match.params.id, withPosts: true})
     } else {
         user = props.posts[0].postedBy;
     }

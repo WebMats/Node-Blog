@@ -10,19 +10,26 @@ class App extends Component {
     fetchedUsers: false
   }
   componentDidMount() {
-    this.fetchUsers()
+    this.fetchData()
     this.setState({fetchedUsers: true})
   }
-  fetchUsers = () => {
+  fetchData = (varObj = null) => {
     const requestBody = {
       query: `
-        query {
-          users {
+        query Users($userId: Int, $withPosts: Boolean = false) {
+          users(id: $userId) {
             id
             name
+            postsList @include (if: $withPosts) {
+              id
+              text
+            }
           }
         }
-      `
+      `,
+      variables: {
+        ...varObj
+      }
     }
     fetch('http://localhost:8000/graphql', {
       method: "POST",
@@ -31,46 +38,17 @@ class App extends Component {
       },
       body: JSON.stringify(requestBody)
     }).then(async (result) => {
-      const resData = await result.json()
-      
-      this.setState({users: resData.data.users})
-    }).catch((err) => {
-      console.log(err)
-      throw err
-    });
-  }
-  fetchPosts = (userId) => {
-    const requestBody = {
-      query: `
-        query Users($userId: Int){
-          users(id: $userId) {
-            name
-            postsList {
-              id
-              text
-            }
-          }
-        }
-      `,
-      variables: {
-        userId: +userId
-      }
-    }
-    fetch(`http://localhost:8000/graphql`, {
-    method: "POST",
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(requestBody)
-  }).then( async (result) => {
       const resData = await result.json();
-      console.log('ran')
-      const userPosts = resData.data.users[0].postsList
-      if (userPosts.length === 0) {
-        this.setState({userPosts: "There are no posts for this user."})
-        return 
+      if (varObj) {
+        const userPosts = resData.data.users[0].postsList
+        if (userPosts.length === 0) {
+          this.setState({userPosts: "There are no posts for this user."})
+          return 
+        }
+        this.setState({userPosts})
+      } else {
+        this.setState({users: resData.data.users})
       }
-      this.setState({userPosts})
     }).catch((err) => {
       console.log(err)
       throw err
@@ -82,13 +60,13 @@ class App extends Component {
         <div className="users__container">
           <ul className="user__list">
               {this.state.users.map(user => <li className="user__list-item" key={user.id}>
-                                                {user.name} <button type="button" onClick={this.fetchPosts.bind(this, user.id)}>
+                                                {user.name} <button type="button" onClick={this.fetchData.bind(this, {userId: +user.id, withPosts: true})}>
                                                               <Link to={`/users/${user.id}`}>Show Posts</Link>
                                                             </button>
                                             </li>)}
           </ul>
         </div>
-        <Route path="/users/:id" render={() => <PostsList triggerFetch={this.fetchPosts} posts={this.state.userPosts} />} />
+        <Route path="/users/:id" render={() => <PostsList triggerFetch={this.fetchData} posts={this.state.userPosts} />} />
       </div>
     );
   }
