@@ -1,0 +1,33 @@
+.App {
+  text-align: center;
+}
+.users__container {
+  padding: 3rem;
+}
+.user__list {
+  display: flex;
+  flex-wrap: wrap;
+}
+.user__list-item {
+  padding: .3rem 1rem;
+  margin: 1rem;
+  font-size: 1.9rem;
+  background-color: rgb(31, 204, 216);
+}
+
+.user__list-item > button {
+  margin: 1rem 0;
+  font-size: 1.2rem;
+  text-decoration: none;
+  height: 2.2rem;
+  width: 9rem;
+  border-radius: 6px;
+}
+.user__list-item > button:hover {
+  transform:translateY(-1px);
+  box-shadow: 1px 1px 4px 0px rgba(0,0,0,0.75);
+  transition-duration: .4s;
+}
+.user__list-item > button a {
+  text-decoration: none;
+}
